@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 @Data
@@ -18,4 +19,11 @@ public class Game {
     private Long id;
 
     private String name;
+
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    @JoinTable(name = "advert_game",
+            joinColumns = @JoinColumn(name = "game_id"),
+            inverseJoinColumns = @JoinColumn(name = "advert_id")
+    )
+    private Collection<Advert> adverts;
 }

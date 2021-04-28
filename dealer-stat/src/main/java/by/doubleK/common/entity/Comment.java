@@ -19,8 +19,8 @@ public class Comment {
 
     private String message;
 
-    @Column(name = "user_id", insertable = false, updatable = false)
-    private Long userId;
+//    @Column(name = "user_id", insertable = false, updatable = false)
+//    private Long userId;
 
     private int mark;
 
