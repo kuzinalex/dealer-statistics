@@ -7,7 +7,7 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -21,11 +21,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "first_name")
-    private String firstName;
+    @Column(name = "username")
+    private String username;
 
-    @Column(name = "last_name")
-    private String lastName;
+    @Column(name = "is_activated")
+    private boolean isActivated;
 
     private String password;
 
@@ -35,18 +35,10 @@ public class User {
     private String createdAt;
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private Collection<Advert> adverts;
-
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private Collection<Comment> comments;
-
-    @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private List<Role> roles;
+    private List<Role> roles = new ArrayList<>();
 }

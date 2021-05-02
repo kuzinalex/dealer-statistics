@@ -1,39 +1,60 @@
 package by.doubleK.common.service;
 
-import by.doubleK.common.dao.CommentDao;
 import by.doubleK.common.entity.Comment;
+import by.doubleK.common.entity.User;
+import by.doubleK.common.repository.CommentRepository;
+import by.doubleK.common.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
 
-    private final CommentDao commentDao;
+
+    private CommentRepository commentRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    public CommentService(CommentDao commentDao) {
-        this.commentDao = commentDao;
+    public CommentService(CommentRepository commentRepository, UserRepository userRepository) {
+        this.commentRepository = commentRepository;
+        this.userRepository = userRepository;
+    }
+
+    @Transactional
+    public boolean saveComment(String username, Comment comment) {
+        User user = userRepository.getByUsername(username);
+        if (user != null && user.isActivated()) {
+            setUser(user, comment);
+            commentRepository.save(comment);
+            return true;
+        } else {
+            return false;
+        }
     }
 
 
-    public void save(Comment comment) {
-        commentDao.save(comment);
+    @Transactional
+    public List<Comment> getUserComments(String username) {
+        return commentRepository.getAllByUser(userRepository.getByUsername(username))
+                .stream().filter(Comment::isApproved)
+                .filter(comment -> comment.getUser().isActivated())
+                .collect(Collectors.toList());
     }
 
 
-    public Comment getById(Long id) {
-        return commentDao.getById(id);
+    @Transactional
+    public void setUser(User user, Comment comment) {
+        comment.setUser(user);
     }
 
-
-    public void delete(Long id) {
-        commentDao.delete(id);
-    }
-
-
-    public List<Comment> getAll() {
-        return commentDao.getAll();
+    @Transactional
+    public void setCommentApprove(Long id) {
+        Comment comment = commentRepository.getById(id);
+        comment.setApproved(!comment.isApproved());
+        commentRepository.save(comment);
     }
 }

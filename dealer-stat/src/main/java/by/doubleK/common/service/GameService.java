@@ -1,39 +1,37 @@
 package by.doubleK.common.service;
 
-import by.doubleK.common.dao.GameDao;
 import by.doubleK.common.entity.Game;
+import by.doubleK.common.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 public class GameService {
-
-    private final GameDao gameDao;
+    private GameRepository gameRepository;
 
     @Autowired
-    public GameService(GameDao gameDao) {
-        this.gameDao = gameDao;
+    public void setGameRepository(GameRepository gameRepository) {
+        this.gameRepository = gameRepository;
     }
 
 
-    public void save(Game game) {
-        gameDao.save(game);
-    }
-
-
-    public Game getById(Long id) {
-        return gameDao.getById(id);
-    }
-
-
-    public void delete(Long id) {
-        gameDao.delete(id);
-    }
-
-
+    @Transactional
     public List<Game> getAll() {
-        return gameDao.getAll();
+        return gameRepository.findAll();
+    }
+
+
+    @Transactional
+    public Game getById(Long id) {
+        return gameRepository.getById(id);
+    }
+
+
+    @Transactional
+    public Game saveGame(Game game) {
+        return gameRepository.save(game);
     }
 }

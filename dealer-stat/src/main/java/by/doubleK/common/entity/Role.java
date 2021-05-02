@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Collection;
 
 @Data
 @NoArgsConstructor
@@ -20,10 +19,4 @@ public class Role {
 
     private String name;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name = "user_role",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private Collection<User> users;
 }

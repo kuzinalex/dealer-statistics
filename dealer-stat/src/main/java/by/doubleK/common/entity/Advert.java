@@ -26,9 +26,6 @@ public class Advert {
 
     private boolean status;
 
-//    @Column(name = "user_id", insertable = false, updatable = false)
-//    private Long userId;
-
     @Column(name = "created_at")
     private String createdAt;
 
@@ -42,7 +39,7 @@ public class Advert {
     @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(name = "advert_game",
-    joinColumns = @JoinColumn(name = "advert_id"),
-    inverseJoinColumns = @JoinColumn(name = "game_id"))
+            joinColumns = @JoinColumn(name = "advert_id"),
+            inverseJoinColumns = @JoinColumn(name = "game_id"))
     private List<Game> games;
 }

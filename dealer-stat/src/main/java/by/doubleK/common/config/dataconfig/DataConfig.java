@@ -7,9 +7,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
-import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -22,6 +21,7 @@ import java.util.Properties;
 @EnableTransactionManagement
 @ComponentScan("by.doubleK.common")
 @PropertySource("classpath:app.properties")
+@EnableJpaRepositories("by.doubleK.common")
 public class DataConfig {
 
     private Environment env;
@@ -30,6 +30,7 @@ public class DataConfig {
     public void setEnv(Environment env) {
         this.env = env;
     }
+
 
     @Bean
     public DataSource dataSource() {
@@ -41,6 +42,7 @@ public class DataConfig {
 
         return dataSource;
     }
+
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
@@ -54,15 +56,6 @@ public class DataConfig {
         return entityManagerFactoryBean;
     }
 
-//    @Bean
-//    public LocalSessionFactoryBean sessionFactoryBean() {
-//        LocalSessionFactoryBean sessionFactoryBean = new LocalSessionFactoryBean();
-//        sessionFactoryBean.setDataSource(dataSource());
-//        sessionFactoryBean.setHibernateProperties(getHibernateProperties());
-//        sessionFactoryBean.setPackagesToScan(Objects.requireNonNull(env.getProperty("db.entitling.packages.to.scan")));
-//
-//        return sessionFactoryBean;
-//    }
 
     @Bean
     public JpaTransactionManager transactionManager() {
@@ -71,6 +64,7 @@ public class DataConfig {
 
         return transactionManager;
     }
+
 
     private Properties getHibernateProperties() {
         Properties properties = new Properties();
